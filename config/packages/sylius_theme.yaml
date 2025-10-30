@@ -1,0 +1,7 @@
+# config/packages/sylius_theme.yaml
+sylius_theme:
+    sources:
+        filesystem:
+            directories:
+                - "%kernel.project_dir%/themes"
+    context: sylius.theme.context.settable

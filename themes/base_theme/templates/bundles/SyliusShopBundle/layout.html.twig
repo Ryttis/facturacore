@@ -1,0 +1,62 @@
+{# themes/base_theme/templates/bundles/SyliusShopBundle/layout.html.twig #}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|default('en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ 'sylius.meta.default_title'|trans }}{% endblock %}</title>
+
+    <link rel="icon" href="{{ asset('themes/base_theme/images/logo.png') }}" type="image/png+xml">
+
+    {# Global stylesheet (child themes can override or add more) #}
+    <link rel="stylesheet" href="{{ asset('themes/base_theme/css/theme.css') }}">
+
+    {% block stylesheets %}{% endblock %}
+    {% block meta %}{% endblock %}
+</head>
+
+<body>
+{# HEADER #}
+{% block header %}
+    <header class="site-header">
+        <div class="container">
+            <a href="{{ path('sylius_shop_homepage') }}" class="logo">
+                <img src="{{ asset('themes/base_theme/images/logo.svg') }}" alt="Logo" width="120">
+            </a>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'Home'|trans }}</a></li>
+                    <li><a href="#">{{ 'Shop'|trans }}</a></li>
+                    <li><a href="#">{{ 'Contact'|trans }}</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{# MAIN CONTENT AREA #}
+<main class="content">
+    {% block content %}
+        {# Default content placeholder — pages override this block #}
+        <div class="container">
+            <h1>{{ 'Welcome to our shop!'|trans }}</h1>
+        </div>
+    {% endblock %}
+</main>
+
+{# FOOTER #}
+{% block footer %}
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; {{ "now"|date("Y") }} CommerceCore • All rights reserved.</p>
+        </div>
+    </footer>
+{% endblock %}
+
+{# SCRIPTS #}
+{% block javascripts %}
+    <script src="{{ asset('themes/base_theme/js/theme.js') }}"></script>
+{% endblock %}
+</body>
+</html>

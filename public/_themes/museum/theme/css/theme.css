@@ -1,0 +1,30 @@
+/* themes/museum_theme/public/css/theme.css */
+:root{
+    --brand-primary: #4a148c;   /* deep purple */
+    --brand-accent:  #ffd54f;   /* warm accent */
+    --brand-text:    #2b2b2b;
+}
+
+html, body { color: var(--brand-text); }
+
+/* headings, links */
+h1, h2, h3, .ui.header { color: var(--brand-primary) !important; }
+a { color: var(--brand-primary); }
+a:hover { color: var(--brand-accent); }
+
+/* buttons (Semantic UI classes are common in Sylius UI) */
+.ui.button.primary, .ui.primary.button {
+    background: var(--brand-primary) !important;
+}
+.ui.button.primary:hover, .ui.primary.button:hover {
+    background: #3a0f6f !important;
+}
+
+/* homepage hero helper */
+.museum-hero {
+    background: url('/themes/museum_theme/images/hero.jpg') center/cover no-repeat;
+    border-radius: .5rem;
+    padding: 80px 30px;
+    margin: 30px 0;
+    color: white;
+}

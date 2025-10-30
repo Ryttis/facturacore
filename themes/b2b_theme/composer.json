@@ -1,0 +1,10 @@
+{
+    "name": "b2b/theme",
+    "type": "sylius-theme",
+    "extra": {
+        "sylius-theme": {
+            "title": "B2B Theme",
+            "parents": ["base/theme"]
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "name": "base/theme",
+    "type": "sylius-theme",
+    "extra": {
+        "sylius-theme": {
+            "title": "Base Theme"
+        }
+    }
+}

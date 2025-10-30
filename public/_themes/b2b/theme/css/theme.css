@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    color: #222;
+    background-color: #f7f7f7;
+}
+
+.site-header {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.site-footer {
+    text-align: center;
+    padding: 20px 0;
+    background: #fafafa;
+    font-size: 0.9em;
+    color: #666;
+}

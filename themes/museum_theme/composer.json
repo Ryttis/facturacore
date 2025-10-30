@@ -1,0 +1,10 @@
+{
+    "name": "museum/theme",
+    "type": "sylius-theme",
+    "extra": {
+        "sylius-theme": {
+            "title": "Museum Theme",
+            "parents": ["base/theme"]
+        }
+    }
+}
