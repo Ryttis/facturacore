@@ -1,7 +1,7 @@
 {
-    "name": "sylius/sylius-standard",
+    "name": "rytis/facturacore",
     "type": "project",
-    "description": "Starting point for projects powered by Sylius eCommerce.",
+    "description": "Modular accounting and invoicing core built on Sylius & Symfony",
     "keywords": [
         "symfony",
         "sylius",
@@ -14,13 +14,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Paweł Jędrzejewski"
-        },
-        {
-            "name": "Sylius project"
-        },
-        {
-            "name": "Community contributions"
+            "name": "Rytis Puodziunas",
+            "email": "prytis@gmail.com"
         }
     ],
     "require": {
