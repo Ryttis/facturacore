@@ -1,0 +1,32 @@
+{
+  "project": "FacturaCore",
+  "date": "TOMORROW",
+  "stage": {
+    "phase": "Blueprint",
+    "step": 1,
+    "description": "Foundational architectural decision"
+  },
+  "status": {
+    "idea_validated": true,
+    "purpose_clarity": true,
+    "sylius_decision": "Confirmed",
+    "agent_integration_goal": "Confirmed - FacturaCore will be the real-world sandbox for MCP-Agent v1",
+    "blueprint_prepared": false
+  },
+  "next_action": {
+    "task": "Choose architectural style",
+    "question": "Monolith or Modular?",
+    "options": {
+      "A": "Symfony monolith with Sylius inside",
+      "B": "Modular monorepo with multiple packages",
+      "C": "Composer packages installed into Sylius app",
+      "D": "Decide together after analysis"
+    },
+    "note": "This choice defines folder structure, namespaces, dependency structure, and future reuse in Dental ERP."
+  },
+  "notes": {
+    "fatigue": true,
+    "decision_quality": "Better to decide tomorrow with fresh mind",
+    "mcp_relation": "Blueprint will guide future MCP-Agent refactoring strategies"
+  }
+}
