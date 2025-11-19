@@ -3,47 +3,48 @@ pipeline {
 
     environment {
         PHP = "/usr/local/opt/php@8.4/bin/php"
-        COMPOSER = "/usr/local/bin/composer"
         NODE = "/usr/local/bin/node"
         NPM = "/usr/local/bin/npm"
-        PROJECT_DIR = "packages/facturacore"
     }
 
     stages {
 
-        stage('Prepare PHP') {
+        stage('Checkout') {
             steps {
-                sh "${PHP} -v"
-                sh "${PHP} ${COMPOSER} --version"
+                checkout scm
+            }
+        }
+
+        stage('Download Composer') {
+            steps {
+                sh """
+                    rm -f composer.phar
+                    curl -sS https://getcomposer.org/download/2.8.12/composer.phar -o composer.phar
+                    ${PHP} composer.phar --version
+                """
             }
         }
 
         stage('Install dependencies') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    sh "${PHP} ${COMPOSER} install --no-interaction --prefer-dist"
-                }
+                sh "${PHP} composer.phar install --no-interaction --prefer-dist"
             }
         }
 
         stage('Run static analysis') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    sh "${PHP} vendor/bin/phpstan analyse --memory-limit=2G || true"
-                }
+                sh "${PHP} vendor/bin/phpstan analyse --memory-limit=2G || true"
             }
         }
 
         stage('Build frontend') {
             steps {
                 script {
-                    dir("${PROJECT_DIR}") {
-                        if (fileExists('package.json')) {
-                            sh "${NPM} install"
-                            sh "${NPM} run build || true"
-                        } else {
-                            echo 'No frontend found — skipping'
-                        }
+                    if (fileExists('package.json')) {
+                        sh "${NPM} install"
+                        sh "${NPM} run build || true"
+                    } else {
+                        echo 'No frontend found — skipping'
                     }
                 }
             }
