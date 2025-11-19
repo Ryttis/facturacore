@@ -1,0 +1,45 @@
+{
+  "project": "FacturaCore",
+  "version": "0.0.1",
+  "type": "Blueprint",
+  "description": "Minimal bookkeeping system built on top of Sylius, designed as a future architectural foundation for a larger Dental ERP.",
+  "context": {
+    "purpose": "Provide legal-minimum bookkeeping (ledger, account plan, P/L, balance sheet).",
+    "scope": "Focus on simple accounting domains while leveraging Sylius admin, resources, and infrastructure.",
+    "design_philosophy": [
+      "Simple domain model",
+      "Modular and extendable structure",
+      "Reuse-friendly patterns for Dental ERP",
+      "Developer productivity via MCP-Server integration"
+    ],
+    "technology_stack": {
+      "framework": "Symfony",
+      "base": "Sylius",
+      "language": "PHP 8.x",
+      "db": "MySQL",
+      "tooling": [
+        "Sylius Resource bundle",
+        "Sylius AdminUI",
+        "Twig",
+        "Doctrine ORM",
+        "MCP Universal Agent v1"
+      ]
+    }
+  },
+  "initial_modules": [
+    "AccountCore",
+    "LedgerCore",
+    "ReportCore (future)",
+    "PeriodCore (future)"
+  ],
+  "mcp_integration": {
+    "goals": [
+      "Test agent on real PHP classes",
+      "Refactor resources",
+      "Generate JSDoc headers",
+      "Validate business logic changes",
+      "Explore multi-file pipelines"
+    ],
+    "importance": "FacturaCore will become a practical development sandbox for Universal Agent improvements."
+  }
+}

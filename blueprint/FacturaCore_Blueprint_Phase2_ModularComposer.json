@@ -1,0 +1,219 @@
+{
+  "project": "FacturaCore",
+  "version": "0.0.1",
+  "phase": "Blueprint Phase 2",
+  "architecture": {
+    "type": "Composer Packages",
+    "repository_strategy": {
+      "type": "monorepo",
+      "reasoning": "Facilitates DDD iteration, shared CI, and unified MCP context",
+      "path": "packages/*",
+      "migration_plan": "Export stable cores (>=v0.3) into standalone repos via subtree split"
+    },
+    "package_structure": {
+      "strategy": "full skeleton",
+      "packages": [
+        "core-kernel",
+        "account-core",
+        "ledger-core",
+        "period-core",
+        "report-core"
+      ],
+      "rationale": "All bounded contexts visible to MCP-Agent and Sylius kernel from start; inactive cores serve as namespace stubs until implemented"
+    },
+    "core_kernel": {
+      "type": "rich_shared_kernel",
+      "responsibilities": {
+        "module_lifecycle": [
+          "ModuleInterface",
+          "ModuleRegistry",
+          "ModuleMetadata for MCP-Agent discovery"
+        ],
+        "domain_abstractions": [
+          "EntityId (ULID wrapper)",
+          "AggregateRoot base class",
+          "DomainEvent interface + dispatcher",
+          "ValueObject base class",
+          "TenantContext provider"
+        ],
+        "shared_utilities": [
+          "DateRange and Period utilities",
+          "Money and Currency helpers",
+          "Doctrine custom types (ULID, Money)",
+          "Event serialization tools"
+        ],
+        "integration": [
+          "Symfony event integration layer",
+          "Lightweight EventBus",
+          "MCP metadata adapter"
+        ]
+      },
+      "rationale": "Provides reusable DDD foundation across all cores, simplifies MCP-Agent introspection and event routing"
+    },
+    "inter_core_communication": {
+      "model": "service_contracts_via_corekernel",
+      "mechanism": {
+        "definition": "Each Core defines explicit service interfaces inside CoreKernel\\Contracts namespace (e.g., AccountReaderInterface, LedgerWriterInterface)",
+        "implementation": "Concrete classes implemented in respective Core packages and autowired in Symfony DI",
+        "resolution": "CoreKernel\\ServiceRegistry resolves requested interfaces across loaded modules"
+      },
+      "event_support": {
+        "note": "DomainEvents remain optional for async notifications, but business integration uses contract interfaces"
+      },
+      "rationale": "Explicit versionable dependencies between bounded contexts; predictable runtime wiring and MCP discovery"
+    },
+    "doctrine_integration": {
+      "strategy": "centralized_mapping",
+      "configuration": {
+        "location": "app/config/packages/doctrine.yaml",
+        "mappings": {
+          "AccountCore": "../packages/account-core/src/Domain/Entity",
+          "LedgerCore": "../packages/ledger-core/src/Domain/Entity",
+          "PeriodCore": "../packages/period-core/src/Domain/Entity",
+          "ReportCore": "../packages/report-core/src/Domain/Entity"
+        }
+      },
+      "migrations": {
+        "storage": "app/migrations",
+        "policy": "single unified migration set for all cores"
+      },
+      "rationale": "Central control over schema evolution and migrations, predictable entity discovery for MCP-Agent schema introspection"
+    },
+    "bundle_bootstrap": {
+      "strategy": "automatic_discovery",
+      "mechanism": {
+        "metadata_source": "composer.json extra section",
+        "example": {
+          "extra": {
+            "factura": {
+              "bundle-class": "Factura\\LedgerCore\\Infrastructure\\Symfony\\LedgerCoreBundle"
+            }
+          }
+        },
+        "loader": "CoreKernel\\BundleLoader scans factura/* packages and registers bundles dynamically at kernel boot"
+      },
+      "rationale": "True modularity and plugin-like extensibility; automatic MCP metadata generation"
+    },
+    "multi_tenancy": {
+      "model": "hybrid",
+      "current_phase": {
+        "type": "soft",
+        "implementation": "tenant_id column on root aggregates"
+      },
+      "future_phase": {
+        "type": "schema_per_tenant",
+        "transition": "Repository and connection factories switch Doctrine connection/schema based on TenantContext"
+      },
+      "corekernel_support": [
+        "TenantContext service (request-scope)",
+        "TenantAwareRepositoryInterface",
+        "Doctrine filter for tenant_id isolation"
+      ],
+      "rationale": "Lightweight MVP with clear upgrade path to full tenant isolation"
+    },
+    "mcp_integration": {
+      "model": "hybrid",
+      "static_metadata": {
+        "description": "Each package exposes a .mcp.json describing context, domain scope, and tools"
+      },
+      "runtime_registry": {
+        "description": "CoreKernel maintains live registry of loaded modules and exposes /mcp/contexts endpoint"
+      },
+      "integration_flow": {
+        "discovery": "MCP-Server scans static files at startup",
+        "runtime_update": "Agent queries CoreKernel for live module state"
+      },
+      "rationale": "Combines build-time visibility with runtime introspection for adaptive MCP tooling"
+    },
+    "build_and_release": {
+      "strategy": "hybrid",
+      "local_development": {
+        "repositories": {
+          "type": "path",
+          "url": "../packages/*",
+          "options": { "symlink": true }
+        }
+      },
+      "versioning_and_release": {
+        "versioning_scheme": "semantic per core (0.x.y)",
+        "ci_pipeline": {
+          "provider": "GitHub Actions",
+          "workflow": "matrix builds per core"
+        }
+      },
+      "rationale": "Path-repo speed with professional release discipline"
+    },
+    "naming_and_conventions": {
+      "policy": "strict_unified",
+      "namespace_pattern": "Factura\\\\<CoreName>\\\\",
+      "table_prefix": "fc_<core>_",
+      "directory_pattern": "packages/<core>/src/{Domain,Application,Infrastructure}",
+      "config_files": "config/{core}.yaml",
+      "rationale": "Consistent naming aids CI automation and MCP static analysis"
+    },
+    "sylius_integration": {
+      "level": "full_resource_and_admin_ui",
+      "components_used": [
+        "SyliusResourceBundle",
+        "SyliusGridBundle",
+        "SyliusAdminBundle",
+        "SyliusUiBundle"
+      ],
+      "integration_pattern": {
+        "entity_mapping": "Sylius Resource metadata under packages/<core>/config/resources/*.yaml",
+        "admin_ui": "Each core registers its own Admin Grid/FormType via Sylius config"
+      },
+      "rationale": "Leverages Sylius admin infrastructure for rapid UI and consistent UX"
+    },
+    "testing_and_ci": {
+      "structure": "per_core_testsuites",
+      "local_execution": "Each core defines phpunit.xml.dist under packages/<core>/",
+      "ci_pipeline": {
+        "provider": "GitHub Actions",
+        "execution_model": "matrix – one job per core"
+      },
+      "rationale": "Isolated bounded contexts, parallel CI, and MCP-aware test feedback"
+    },
+    "developer_tooling": {
+      "philosophy": "agent_driven_devops",
+      "dev_cli": {
+        "commands": {
+          "make up": "Start Docker/Sail environment",
+          "make core=<name>": "Focus MCP-Agent on given core",
+          "make test": "Run all core test suites",
+          "make release": "Trigger version bump workflow"
+        }
+      },
+      "mcp_agent_shortcuts": {
+        "examples": [
+          "mcp summarize packages/account-core/src/Domain/Entity/Account.php",
+          "mcp check packages/ledger-core/src/Application/Service/LedgerPoster.php",
+          "mcp context list"
+        ]
+      },
+      "environment": {
+        "containerization": "Docker + Laravel Sail",
+        "services": ["php-fpm", "mysql", "redis", "mcp-agent"]
+      },
+      "rationale": "FacturaCore as MCP-Agent sandbox with direct CLI integration"
+    },
+    "security_and_access_control": {
+      "strategy": "reuse_sylius_framework",
+      "foundation": {
+        "framework": "Symfony Security Component",
+        "integrated_layer": "SyliusUserBundle",
+        "features": [
+          "Authentication, role hierarchy, voters",
+          "Password hashing, remember-me, throttling"
+        ]
+      },
+      "extension_points": {
+        "custom_roles": "ROLE_LEDGER_VIEWER, ROLE_ACCOUNT_EDITOR",
+        "tenant_context": "Tenant-aware UserProvider",
+        "api_tokens": "Optional JWT/API keys for agent or integrations"
+      },
+      "rationale": "Reuse Sylius/Symfony security with tenant-aware extensions"
+    }
+  },
+  "summary": "Blueprint defines full Variant C Composer-package architecture for FacturaCore v0.0.1, establishing modular Sylius-based bookkeeping system and live MCP-Agent sandbox."
+}

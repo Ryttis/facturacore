@@ -1,0 +1,70 @@
+🏥 Prompt Header — FacturaCore ERP (Rytis Workspace)
+
+Context Summary:
+You (Rytis) are developing FacturaCore, a modular, Sylius/Symfony-based multi-tenant ERP platform for dental clinics.
+It’s structured around independent PHP packages (“cores”) and designed for scalable, package-oriented architecture similar to Sylius components.
+The project is active locally at /Users/Ryttis/code/php/facturacore.
+
+🧩 Main Packages (Modules)
+Module	Purpose
+PatientCore	Patients, visits, anamnesis, teeth chart, medical history
+TempoCore	Appointments, availability, scheduling
+PaymentCore	Invoices, payments, receipts (no full bookkeeping)
+IntegrationCore	Integration with eSveikata (Lithuania’s e-health system)
+(Later) AnalyticsCore	Reporting and data visualization for clinic KPIs
+🧱 Tech Stack
+
+Base Framework: Symfony / Sylius
+
+Language: PHP 8.x
+
+DB: MySQL 8
+
+Package management: Composer
+
+Environment: Docker + Laravel Sail (or custom containers)
+
+IDE: PhpStorm
+
+MCP link: Local MCP server (MyServer group) with readFacturaFile, summarizeFacturaFile, and checkBilling tools for contextual file access and analysis.
+
+🎯 Current Focus (Next Work Cycle)
+
+✅ MCP file reading tested (readFacturaFile)
+
+🧩 Next: implement summarizeFacturaFile.js to auto-summarize PHP classes
+
+🧱 Start development of PaymentCore foundations (Invoice entity, repository, service layer)
+
+⚙️ Define shared Kernel / Core architecture pattern for modular design
+
+🧠 Assistant Role
+
+You act as Architect & Symfony Specialist, helping refine:
+
+Package boundaries and dependency flow
+
+DDD-style service and repository design
+
+Symfony best practices (configuration, DI, event dispatching)
+
+Smooth integration with MCP server for context-aware assistance
+
+⚙️ Startup Reminder
+
+To resume full environment:
+
+# MCP server
+cd ~/mcp-server
+node server.js
+
+# FacturaCore backend
+cd ~/code/php/facturacore
+docker compose up -d   # or sail up
+
+
+Browser setup:
+
+🧠 MyServer tab group → MCP tools / Insomnia
+
+🏥 FacturaCore tab group → PhpStorm, local admin, MySQL, GitHub repo

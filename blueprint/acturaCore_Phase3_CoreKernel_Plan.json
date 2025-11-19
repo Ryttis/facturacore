@@ -1,0 +1,33 @@
+{
+  "project": "FacturaCore",
+  "phase": "3",
+  "title": "CoreKernel Implementation Plan",
+  "goal": "Implement shared kernel foundation to bootstrap modular cores",
+  "objectives": [
+    "Create ModuleInterface and ModuleRegistry",
+    "Implement ServiceRegistry and Contracts namespace",
+    "Add TenantContext and DomainEvent system",
+    "Provide BaseEntityId, AggregateRoot, ValueObject",
+    "Wire automatic bundle discovery"
+  ],
+  "deliverables": [
+    "packages/core-kernel/src/ModuleInterface.php",
+    "packages/core-kernel/src/ModuleRegistry.php",
+    "packages/core-kernel/src/ServiceRegistry.php",
+    "packages/core-kernel/src/TenantContext.php",
+    "packages/core-kernel/src/DomainEvent.php",
+    "packages/core-kernel/src/EntityId.php"
+  ],
+  "estimated_effort_hours": 16,
+  "environment": {
+    "framework": "Symfony 7 + Sylius 2",
+    "language": "PHP 8.3",
+    "db": "MySQL 8",
+    "integration": "MCP-Agent runtime bridge"
+  },
+  "notes": {
+    "style": "strict PSR-12",
+    "testing": "phpunit with BaseTestCase in CoreKernel\\Test",
+    "mcp_tools": "summarizeFacturaFile, checkContracts"
+  }
+}
