@@ -5,6 +5,7 @@ pipeline {
         PHP = "/usr/local/opt/php@8.4/bin/php"
         NODE = "/usr/local/bin/node"
         NPM = "/usr/local/bin/npm"
+        PATH = "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     }
 
     stages {
@@ -33,7 +34,7 @@ pipeline {
 
         stage('Run static analysis') {
             steps {
-                sh "${PHP} vendor/bin/phpstan analyse --memory-limit=2G || true"
+                sh "${PHP} vendor/bin/phpstan analyse --memory-limit=2G"
             }
         }
 
@@ -57,3 +58,4 @@ pipeline {
         }
     }
 }
+
