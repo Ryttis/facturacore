@@ -10,13 +10,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-                echo 'Repository pulled successfully'
-            }
-        }
-
         stage('Prepare PHP') {
             steps {
                 sh "${PHP} -v"
@@ -36,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Build frontend (if exists)') {
+        stage('Build frontend') {
             steps {
                 script {
                     if (fileExists('package.json')) {
